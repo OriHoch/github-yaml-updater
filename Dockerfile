@@ -1,6 +1,7 @@
 FROM alpine
-RUN apk --update add python2 git py2-pip
+RUN apk --update add python2 git py2-pip bash
 RUN pip install --upgrade pip && pip install pyyaml
+RUN pip install requests
 COPY entrypoint.sh /
-COPY update_yaml.py /
+COPY *.py /
 ENTRYPOINT ["/entrypoint.sh"]
