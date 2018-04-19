@@ -23,6 +23,7 @@ if [ "${YAML_UPDATE_TYPE}" == "docker-image-suffixes" ]; then
         [ "${DOCKER_IMAGE_UPDATE_MAP_JSON}" == "" ] ||
         [ "${DOCKER_IMAGE_TAG}" == "" ]
     ) && echo missing required environment variables && exit 1
+    echo waiting for docker images...
     YAML_UPDATE_JSON=$(/get_docker_image_suffixes_update_json.py "${DOCKER_IMAGE_SUFFIXES}" "${DOCKER_IMAGE_PREFIX}" "${DOCKER_IMAGE_UPDATE_MAP_JSON}" "${DOCKER_IMAGE_TAG}")
     [ "$?" != "0" ] && echo failed to get update json && exit 1
     [ "${DEBUG}" == "1" ] && echo "${YAML_UPDATE_JSON}"
