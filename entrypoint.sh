@@ -46,7 +46,7 @@ ls -lah $YAML_UPDATE_FILE
 
 ! git add "${YAML_UPDATE_FILE}" && echo failed git add && exit 1
 ! git commit -m "${GIT_COMMIT_MESSAGE}" && echo failed git commit && exit 1
-! git push $PUSH_PARAMS 2>/dev/null && echo failed git push, error log suppressed to prevent exposing the github token && exit 1
+! git push $PUSH_PARAMS && echo failed git push && exit 1
 
 echo Great Success
 exit 0
