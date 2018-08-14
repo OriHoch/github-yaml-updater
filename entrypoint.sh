@@ -13,8 +13,8 @@ cd `mktemp -d`
 
 ! git clone --depth 1 $CLONE_PARAMS . && echo failed git clone && exit 1
 
-[ -e "${YAML_UPDATE_FILE}" ] && ls -lah $YAML_UPDATE_FILE
-IS_NEW_FILE=$?
+IS_NEW_FILE=yes
+[ -e "${YAML_UPDATE_FILE}" ] && ls -lah $YAML_UPDATE_FILE && IS_NEW_FILE=no
 
 if [ "${YAML_UPDATE_TYPE}" == "docker-image-suffixes" ]; then
     (
@@ -35,7 +35,7 @@ else
     ! /update_yaml.py "${YAML_UPDATE_JSON}" "${YAML_UPDATE_FILE}" && echo failed yaml update && exit 1
 fi
 
-[ "${IS_NEW_FILE}" == "0" ] && git diff --shortstat --exit-code "${YAML_UPDATE_FILE}" && echo no change detected, skipping git push && exit 0
+[ "${IS_NEW_FILE}" == "no" ] && git diff --shortstat --exit-code "${YAML_UPDATE_FILE}" && echo no change detected, skipping git push && exit 0
 
 ls -lah $YAML_UPDATE_FILE
 [ "${DEBUG}" == "1" ] && cat $YAML_UPDATE_FILE
@@ -47,6 +47,14 @@ ls -lah $YAML_UPDATE_FILE
 
 ! git add "${YAML_UPDATE_FILE}" && echo failed git add && exit 1
 ! git commit -m "${GIT_COMMIT_MESSAGE}" && echo failed git commit && exit 1
+
+if [ "${SSH_DEPLOY_KEY_FILE}" != "" ]; then
+    echo setting up ssh deploy key
+    mkdir -p ~/.ssh &&\
+    cp "${SSH_DEPLOY_KEY_FILE}" ~/.ssh/id_rsa &&\
+    chmod 400 ~/.ssh/id_rsa
+fi
+
 ! git push $PUSH_PARAMS && echo failed git push && exit 1
 
 echo Great Success

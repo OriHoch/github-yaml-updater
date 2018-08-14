@@ -2,7 +2,9 @@
 
 Update yaml files on GitHub repos
 
-## Usage
+## Examples
+
+Using GitHub [Deploy Keys](https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys)
 
 ```
  docker run -e CLONE_PARAMS="--branch repo_branch https://github.com/repo_owner/repo_name.git" \
@@ -11,7 +13,22 @@ Update yaml files on GitHub repos
             -e GIT_USER_EMAIL=deployer_user_email \
             -e GIT_USER_NAME=deployer_user_name \
             -e GIT_COMMIT_MESSAGE="auto update commit message" \
-            -e PUSH_PARAMS='https://github_token@repo_slug/repo_name repo_branch' \
+            -e PUSH_PARAMS='git@github.com:repo_slug.git repo_branch' \
+            -v /local/path/to/deploy_key.id_rsa:/deploy_key.id_rsa \
+            -e SSH_DEPLOY_KEY_FILE=/deploy_key.id_rsa \
+            orihoch/github_yaml_updater
+```
+
+Using GitHub token
+
+```
+ docker run -e CLONE_PARAMS="--branch repo_branch https://github.com/repo_owner/repo_name.git" \
+            -e YAML_UPDATE_JSON='{"yaml_attr_to_update":"value"}' \
+            -e YAML_UPDATE_FILE='yaml_file_to_update.yaml' \
+            -e GIT_USER_EMAIL=deployer_user_email \
+            -e GIT_USER_NAME=deployer_user_name \
+            -e GIT_COMMIT_MESSAGE="auto update commit message" \
+            -e PUSH_PARAMS='https://github_token@repo_slug repo_branch' \
             orihoch/github_yaml_updater
 ```
 
